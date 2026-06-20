@@ -2,7 +2,6 @@ import React, { useEffect, useState, useCallback, useRef } from 'react';
 import {
   View,
   StyleSheet,
-  ActivityIndicator,
   Text,
   Animated,
   Easing,
@@ -13,6 +12,7 @@ import { SDUIEngine } from './components/sdui/DynamicRenderes';
 import { CampaignSwitcher } from './components/sdui/CampaignSwitcher';
 import { fetchPayload, getAllCampaigns } from './utils/mockPayload';
 import { CampaignPayload } from './types/schemas';
+import LottieView from 'lottie-react-native';
 
 const RootComponent = () => {
   const [campaign, setCampaign] = useState<CampaignPayload | null>(null);
@@ -108,7 +108,12 @@ const RootComponent = () => {
         <View style={[styles.decorBlobAlt, { backgroundColor: theme.accent }]} />
         <View style={styles.centered}>
           <View style={[styles.frostCard, { borderColor: theme.primary }]}>
-            <ActivityIndicator size="large" color={theme.primary} />
+            <LottieView
+              source={require('./assets/animations/anim.json')}
+              autoPlay
+              loop
+              style={{ width: 120, height: 120 }}
+            />
             <Text style={[styles.loadingText, { color: theme.primary }]}>Loading campaign...</Text>
             <Text style={[styles.loadingSubtext, { color: theme.secondary }]}>Preparing a richer layout experience.</Text>
           </View>
@@ -188,17 +193,9 @@ const styles = StyleSheet.create({
   },
   frostCard: {
     width: '100%',
-    borderRadius: 24,
     paddingVertical: 28,
     paddingHorizontal: 20,
-    backgroundColor: 'rgba(255,255,255,0.82)',
-    borderWidth: 1,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.12,
-    shadowRadius: 24,
-    elevation: 6,
   },
   errorText: {
     fontSize: 22,

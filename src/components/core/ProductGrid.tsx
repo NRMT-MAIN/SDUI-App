@@ -12,7 +12,6 @@ interface ProductGridProps {
 const Grid = ({ items, columns = 2 }: ProductGridProps) => {
   const { theme } = useAppTheme();
 
-  // Split items into rows based on columns
   const rows = useMemo(() => {
     const result: ProductItem[][] = [];
     for (let i = 0; i < items.length; i += columns) {

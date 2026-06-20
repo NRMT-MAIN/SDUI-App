@@ -27,8 +27,8 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '100%',
-    height: 120,         // fixed image height
-    resizeMode: 'cover', // ensures full coverage
+    height: 120,         
+    resizeMode: 'cover', 
   },
   title: {
     fontSize: 14,

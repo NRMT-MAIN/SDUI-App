@@ -9,13 +9,8 @@ interface SDUIEngineProps {
   payload: CampaignPayload;
 }
 
-/**
- * SDUIEngine: Main rendering engine for Server-Driven UI
- * Implements high-performance virtualization with FlashList
- * Includes defensive resilience against corrupt payloads
- */
+
 export const SDUIEngine = React.memo(({ payload }: SDUIEngineProps) => {
-  // Defensive data validation
   const validNodes = useMemo(() => {
     if (!Array.isArray(payload.layout_nodes)) {
       console.warn('[SDUI] Invalid layout_nodes: expected array');
@@ -23,7 +18,6 @@ export const SDUIEngine = React.memo(({ payload }: SDUIEngineProps) => {
     }
 
     return payload.layout_nodes.filter((node): node is SDUINode => {
-      // Validate node structure
       if (!node || typeof node !== 'object') {
         console.warn('[SDUI] Invalid node: must be an object');
         return false;
@@ -59,8 +53,6 @@ export const SDUIEngine = React.memo(({ payload }: SDUIEngineProps) => {
   );
 
   const keyExtractor = useCallback((item: SDUINode, index: number) => {
-    // Use combination of type and index for stable keys
-    // Prevents re-rendering issues during list updates
     return `${item.type}-${index}`;
   }, []);
 

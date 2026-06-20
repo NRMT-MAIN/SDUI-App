@@ -1,5 +1,5 @@
-import React, { memo } from 'react';
-import { View, StyleSheet } from 'react-native';
+import React, { memo, useRef, useEffect, useState } from 'react';
+import { View, StyleSheet, Animated } from 'react-native';
 import LottieView from 'lottie-react-native';
 import { OverlayConfig } from '../../types/schemas';
 
@@ -8,27 +8,46 @@ interface FullScreenOverlayProps {
 }
 
 const Overlay = ({ overlay }: FullScreenOverlayProps) => {
-  if (!overlay) {
+  const [visible, setVisible] = useState(true);
+  const fadeAnim = useRef(new Animated.Value(1)).current;
+  const lottieRef = useRef<LottieView>(null);
+
+  useEffect(() => {
+    if (!overlay?.animation_url) return;
+
+    lottieRef.current?.play();
+
+    const timer = setTimeout(() => {
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 2000,
+        useNativeDriver: true,
+      }).start(() => setVisible(false));
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [overlay, fadeAnim]);
+
+  if (!overlay || !overlay.animation_url || !visible) {
     return null;
   }
 
   return (
-    <View
+    <Animated.View
       style={[
         styles.overlayContainer,
-        {
-          pointerEvents: overlay.pointerEvents || 'none',
-        },
+        { opacity: fadeAnim, pointerEvents: overlay.pointerEvents || 'none' },
       ]}
       testID="full-screen-overlay"
     >
       <LottieView
-        source={{ uri: overlay.animation_url }}
-        autoPlay
-        loop
+        ref={lottieRef}
+        source= { { uri: overlay.animation_url } }
+        autoPlay={false} 
+        loop={true}     
         style={styles.animation}
       />
-    </View>
+    </Animated.View>
   );
 };
 
@@ -38,6 +57,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 999,
+    backgroundColor: 'transparent',
   },
   animation: {
     width: '100%',
